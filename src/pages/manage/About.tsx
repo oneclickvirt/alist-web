@@ -4,7 +4,9 @@ import { useT, useManageTitle } from "~/hooks"
 
 const fetchReadme = async () =>
   await (
-    await fetch("https://raw.githubusercontent.com/oneclickvirt/.github/refs/heads/main/profile/README.md")
+    await fetch(
+      "https://raw.githubusercontent.com/oneclickvirt/.github/refs/heads/main/profile/README.md",
+    )
   ).text()
 
 const About = () => {
