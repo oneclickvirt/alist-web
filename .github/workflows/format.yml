@@ -31,5 +31,5 @@ jobs:
         with:
           commit_message: "style: format code with prettier"
           commit_user_name: Isla
-          commit_user_email: bot@nn.ci
-          commit_author: "Isla <bot@nn.ci>"
+          commit_user_email: root@spiritlhl.net
+          commit_author: "spiritlhl <root@spiritlhl.net>"
