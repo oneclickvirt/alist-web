@@ -6,7 +6,7 @@ cat package.json
 
 # build
 pnpm install --strict-peer-dependencies=false
-# pnpm i18n:release
+pnpm i18n:release
 pnpm build
 cp -r dist ../
 cd ..
