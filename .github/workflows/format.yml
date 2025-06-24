@@ -21,7 +21,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --strict-peer-dependencies=false
 
       - name: Format
         run: pnpm run format
