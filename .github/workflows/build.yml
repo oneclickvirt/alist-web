@@ -48,12 +48,12 @@ jobs:
         run: |
           cd alist-web
           pnpm install --strict-peer-dependencies=false
-          # pnpm i18n:build
+          pnpm i18n:build
           pnpm build
           cd ..
-        # env:
-        #   CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        #   CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
       - name: Commit dist
         run: |
