@@ -1,76 +1,71 @@
 name: build
-
-on:
-  push:
-    branches:
-      - main
-
 jobs:
   build:
     strategy:
       matrix:
-        platform: [ubuntu-latest]
+        platform:
+        - ubuntu-latest
     name: Build
     runs-on: ${{ matrix.platform }}
     steps:
-      - name: Setup Node
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "18"
-          registry-url: "https://registry.npmjs.org"
-
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 9
-          run_install: false
-
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: main
-          path: alist-web
-          persist-credentials: false
-          fetch-depth: 0
-          submodules: recursive
-
-      - name: Checkout dist repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: oneclickvirt/web-dist
-          ref: dev
-          path: web-dist
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Build
-        run: |
-          cd alist-web
-          pnpm install --strict-peer-dependencies=false
-          pnpm i18n:build
-          pnpm build
-          cd ..
-        env:
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-
-      - name: Commit dist
-        run: |
-          cd web-dist
-          rm -rf dist
-          cp -r ../alist-web/dist .
-          git add .
-          git config --local user.email "root@spiritlhl.net"
-          git config --local user.name "spiritlhl"
-          git commit --amend -m "upload dev dist"
-          cd ..
-
-      - name: Upload dist files
-        uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # v1.3.0
-        with:
-          github_token: ${{ secrets.MY_TOKEN }}
-          branch: dev
-          directory: web-dist
-          repository: oneclickvirt/web-dist
-          force: true
+    - name: Setup Node
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version: '24'
+        registry-url: https://registry.npmjs.org
+    - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 9
+        run_install: false
+        standalone: false
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: main
+        path: alist-web
+        persist-credentials: false
+        fetch-depth: 0
+        submodules: recursive
+    - name: Checkout dist repo
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        repository: oneclickvirt/web-dist
+        ref: dev
+        path: web-dist
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Build
+      run: |
+        cd alist-web
+        pnpm install --frozen-lockfile --strict-peer-dependencies=false
+        pnpm i18n:build
+        pnpm build
+        cd ..
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+    - name: Commit dist
+      run: |
+        cd web-dist
+        rm -rf dist
+        cp -r ../alist-web/dist .
+        git add .
+        git config --local user.email "root@spiritlhl.net"
+        git config --local user.name "spiritlhl"
+        git commit --amend -m "upload dev dist"
+        cd ..
+    - name: Upload dist files
+      uses: ad-m/github-push-action@881a6320fdb16eb5318c5054f31c218aec2b324c # v1.3.0
+      with:
+        github_token: ${{ secrets.MY_TOKEN }}
+        branch: dev
+        directory: web-dist
+        repository: oneclickvirt/web-dist
+        force: true
+'on':
+  push:
+    branches:
+    - main
+  workflow_dispatch: null
